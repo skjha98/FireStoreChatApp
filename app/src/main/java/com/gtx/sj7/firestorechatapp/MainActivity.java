@@ -1,5 +1,6 @@
 package com.gtx.sj7.firestorechatapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,8 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.gtx.sj7.firestorechatapp.Adapters.ViewPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,6 +19,22 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
     private ViewPagerAdapter mPagerAdapter;
+
+    //Firebase Authentication
+    FirebaseAuth mAuth;
+    FirebaseUser mCurrentUser;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mCurrentUser = mAuth.getCurrentUser();
+        if(mCurrentUser==null){
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
                 setPage(2);
             }
         });
+
+        //FirebaseAuth mAuth instance
+        mAuth = FirebaseAuth.getInstance();
 
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
