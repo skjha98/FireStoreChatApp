@@ -7,10 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class RegisterActivity extends AppCompatActivity {
 
+    private static final int PICK_IMAGE = 1;
     private EditText nameEditText, emailEditText, phoneEditText, passwordEditText;
     private Button createButton, loginButton;
+    private CircleImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.register_password);
         createButton = findViewById(R.id.register_create_button);
         loginButton = findViewById(R.id.register_login_button);
+        profileImage = findViewById(R.id.register_image);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,5 +36,28 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeImage();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+
+        if(requestCode==PICK_IMAGE){
+            profileImage.setImageURI(data.getData());
+        }
+    }
+
+    private void changeImage() {
+        Intent pickImageIntent = new Intent();
+        pickImageIntent.setType("image/*");
+        pickImageIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(pickImageIntent, "Select Image"), PICK_IMAGE);
     }
 }
